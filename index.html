@@ -183,10 +183,14 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
     <div class="hero-body">
       <h4 class="subtitle has-text-centered">
         <span style="font-weight:500;color:#444;">
-          We show that hallucinated tokens in LVLMs leave two distinct internal signatures:
-          <b>diffuse attention</b> and <b>weak patch-level semantic alignment</b>.
-          A lightweight classifier on these per-layer signals achieves up to <b>90% F1</b>,
-          outperforming all existing token-level detectors.
+        Existing hallucination detectors assess how an object token relates to the <em>entire</em> image — 
+        but this global view misses critical local structure and cross-modal token-level dynamics.
+        We start from a simple observation: <b>a faithful token must be grounded in a specific image region</b>.
+        Analyzing token-level interactions across layers, we uncover two signatures of hallucination:
+        <b>diffuse attention</b> (the model looks everywhere) and
+        <b>weak patch-level alignment</b> (no region matches semantically).
+        A lightweight classifier on these signals achieves up to <b>90% F1</b>,
+        outperforming all existing token-level detectors.
         </span>
       </h4>
     </div>
