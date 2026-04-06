@@ -5,7 +5,7 @@
   <meta name="description" content="Fine-Grained Token Grounding for LVLM Hallucination Detection">
   <meta name="keywords" content="hallucination, vision-language models, attention, grounding, CVPR 2025">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Token Grounding Detector — CVPR 2025</title>
+  <title>Token Grounding Detector — CVPR 2026</title>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
@@ -86,7 +86,7 @@
                Phan, Vu Minh Hieu},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer
                Vision and Pattern Recognition (CVPR)},
-  year      = {2025}
+  year      = {2026}
 }</div>
     <button class="bibtex-copy" onclick="copyBibtex()">Copy to Clipboard</button>
     <span id="copyMsg" style="margin-left:10px;color:#4a6cf7;font-size:0.85em;display:none;">Copied!</span>
@@ -122,7 +122,7 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
         <div class="column has-text-centered">
           <h1 class="title is-2 publication-title">Beyond the Global Scores</h1>
           <h3 class="title is-4 publication-title">Fine-Grained Token Grounding as a Robust Detector of LVLM Hallucinations</h3>
-          <h5 class="subtitle is-5 publication-awards">CVPR 2025</h5>
+          <h5 class="subtitle is-5 publication-awards">CVPR 2026</h5>
 
           <div class="is-size-5 publication-authors">
             <span class="author-block"><a href="#" style="color:#f68946;font-weight:normal;">Tuan Dung Nguyen<sup>1,2</sup></a>,</span>
@@ -251,24 +251,22 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
             <b>High ADS</b> → scattered attention → <span style="color:red;">hallucinated</span>
           </p>
         </div>
-        <div class="column is-6">
-          <h5 class="title is-5" style="color:#2980b9;">Cross-modal Grounding Consistency (CGC)</h5>
-          <p>Measures <em>semantic alignment</em> between a token's hidden state and the most relevant patches. At each layer, we compute cosine similarity with all patches and average the top-\(k\):</p>
-          <div class="formula-box">
-            \(C_t^{(n)} = \frac{1}{k}\sum_{p \in \mathcal{T}_t^{(n)}} \frac{\langle \mathbf{z}_t^{(n)},\, \mathbf{v}_p^{(n)} \rangle}{\|\mathbf{z}_t^{(n)}\| \;\|\mathbf{v}_p^{(n)}\|}\)
-          </div>
-          <p style="font-size:0.88em;color:#555;">
-            \(\mathbf{z}_t^{(n)}\) = token hidden state;
-            \(\mathbf{v}_p^{(n)}\) = patch embedding;
-            \(\mathcal{T}_t^{(n)}\) = top-5% most similar patches.
-          </p>
-          <p>
-            <b>High CGC</b> → strong local alignment → <span style="color:green;">grounded</span><br>
-            <b>Low CGC</b> → no patch matches → <span style="color:red;">hallucinated</span>
-          </p>
-        </div>
-      </div>
 
+    <div class="column is-6" style="display:flex;flex-direction:column;">
+    <h5 class="title is-5" style="color:#2980b9;">Cross-modal Grounding Consistency (CGC)</h5>
+    <p>We evaluate the feature similarities between the generated token and image patches, and coin this metric as <em>Cross-modal Grounding Consistency</em> (CGC). At layer \(n\), let \(\mathbf{z}^{(n)}_t, \mathbf{v}^{(n)}_p \in \mathbb{R}^d\) be the token and patch embeddings, and define cosine similarity</p>
+    <div class="formula-box">
+        \(S^{(n)}_{t,p} = \frac{\langle \mathbf{z}^{(n)}_t,\, \mathbf{v}^{(n)}_p \rangle}{\|\mathbf{z}^{(n)}_t\|_2 \;\|\mathbf{v}^{(n)}_p\|_2}\)
+    </div>
+    <p>which reflects <em>local structural alignment</em>. The per-token map is \(\mathbf{S}^{(n)}_t = [S^{(n)}_{t,p}]_{p \in \mathcal{P}}\). To emphasize localized evidence, we obtain the token grounding score \(C^{(n)}_t\) by aggregating the top-\(k\) patches \(\mathcal{T}^{(n)}_t\):</p>
+    <div class="formula-box">
+        \(C^{(n)}_t = \frac{1}{k} \sum_{p \in \mathcal{T}^{(n)}_t} S^{(n)}_{t,p}\)
+    </div>
+    <p style="margin-top:auto;">
+        <b>High CGC</b> → token aligns with specific visual content → <span style="color:green;">grounded</span><br>
+        <b>Low CGC</b> → no patch matches semantically → <span style="color:red;">hallucinated</span>
+    </p>
+    </div>   
       <p>Per-layer scores are concatenated into a single feature vector for a lightweight classifier:</p>
       <div class="formula-box">
         \(\mathbf{f}_t = [\,\text{ADS}_t^{(1)}, \ldots, \text{ADS}_t^{(L)} \;\|\; C_t^{(1)}, \ldots, C_t^{(L)}\,] \in \mathbb{R}^{2L}\)
@@ -356,15 +354,6 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
 </section>
 
 <!-- ================ FOOTER ================ -->
-<section class="section">
-  <div class="container is-max-desktop has-text-centered">
-    <p style="color:#888;font-size:0.9em;">
-      This research is funded by Hanoi University of Science and Technology (HUST) under grant number T2024-TĐ-002.<br>
-      Parts of our codebase build upon <a href="https://github.com/ZhangqiJiang07/middle_layers_indicating_hallucinations">SVAR</a>. We thank the authors for releasing their code.<br>
-      For questions, contact <a href="mailto:tuandung2812alt@gmail.com">tuandung2812alt@gmail.com</a>.
-    </p>
-  </div>
-</section>
 
 </body>
 </html>
