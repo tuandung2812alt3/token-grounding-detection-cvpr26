@@ -269,11 +269,6 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
         </div>
       </div>
 
-      <div style="text-align:center;margin:1.5em 0;">
-        <img width="95%" src="images/fig3_ads_pipeline.png" alt="Figure 3">
-        <p class="fig-caption">Figure 3. ADS pipeline: extract attention → threshold → connected components → entropy.</p>
-      </div>
-
       <p>Per-layer scores are concatenated into a single feature vector for a lightweight classifier:</p>
       <div class="formula-box">
         \(\mathbf{f}_t = [\,\text{ADS}_t^{(1)}, \ldots, \text{ADS}_t^{(L)} \;\|\; C_t^{(1)}, \ldots, C_t^{(L)}\,] \in \mathbb{R}^{2L}\)
