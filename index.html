@@ -138,14 +138,18 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
             <span class="author-block"><a href="#" style="color:#008AD7;font-weight:normal;">Vu Minh Hieu Phan<sup>2,*</sup></a></span>
           </div>
 
-          <div class="is-size-6 publication-authors" style="margin-top:0.5em;">
-            <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>1</sup> Hanoi University of Science and Technology</span>&nbsp;&nbsp;
-            <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>2</sup> AIML, University of Adelaide</span>&nbsp;&nbsp;
-            <span class="author-block"><b style="color:#F2A900;font-weight:normal;">&#x25B6;</b> <sup>3</sup> Nanjing University</span>&nbsp;&nbsp;
-            <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>4</sup> MBZUAI</span>&nbsp;&nbsp;
-            <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>5</sup> Hanoi-Amsterdam High School for the Gifted</span>
-          </div>
-          <div class="is-size-6 publication-authors"><span class="author-block"><sup>*</sup>Corresponding authors</span></div>
+    <div class="is-size-6 publication-authors has-text-centered" style="margin-top:0.5em;">
+    <div>
+        <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>1</sup> Hanoi University of Science and Technology</span>&nbsp;&nbsp;&nbsp;
+        <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>2</sup> AIML, University of Adelaide</span>&nbsp;&nbsp;&nbsp;
+        <span class="author-block"><b style="color:#F2A900;font-weight:normal;">&#x25B6;</b> <sup>3</sup> Nanjing University</span>
+    </div>
+    <div style="margin-top:0.2em;">
+        <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>4</sup> MBZUAI</span>&nbsp;&nbsp;&nbsp;
+        <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>5</sup> Hanoi-Amsterdam High School for the Gifted</span>
+    </div>
+    </div>          
+    <div class="is-size-6 publication-authors"><span class="author-block"><sup>*</sup>Corresponding authors</span></div>
 
           <div class="column has-text-centered" style="margin-top:0.8em;">
             <div class="publication-links">
@@ -181,7 +185,7 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <h4 class="subtitle has-text-centered">
+    <h4 class="subtitle" style="text-align:justify;">
         <span style="font-weight:500;color:#444;">
         Existing hallucination detectors assess how an object token relates to the <em>entire</em> image — 
         but this global view misses critical local structure and cross-modal token-level dynamics.
