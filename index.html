@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Fine-Grained Token Grounding for LVLM Hallucination Detection">
+  <meta name="keywords" content="hallucination, vision-language models, attention, grounding, CVPR 2025">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Token Grounding Detector — CVPR 2025</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/954/954591.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <style>
+    body { font-family: 'Noto Sans', sans-serif; }
+    .publication-title { font-family: 'Google Sans', sans-serif; }
+    .publication-awards { color: #b02020; }
+    .section { padding: 1.5rem 1.5rem; }
+    .hero.teaser { padding: 1.5rem 1.5rem; margin-bottom: 0; }
+    .hero.teaser .hero-body { padding: 1rem 1.5rem; }
+    .insight-box {
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+      border-left: 4px solid #4a6cf7; padding: 1em 1.2em; margin: 0.8em 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .finding-tag {
+      display: inline-block; background: #4a6cf7; color: white;
+      padding: 2px 10px; border-radius: 4px; font-size: 0.82em; font-weight: 600; margin-right: 4px;
+    }
+    .fig-caption {
+      font-size: 0.88em; color: #555; margin-top: 0.4em; text-align: center; font-style: italic;
+    }
+    .formula-box {
+      background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px;
+      padding: 0.8em 1.2em; margin: 0.8em 0; text-align: center;
+    }
+    .bibtex-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;
+    }
+    .bibtex-overlay.active { display: flex; }
+    .bibtex-modal {
+      background: white; border-radius: 10px; padding: 24px; max-width: 700px; width: 90%;
+      position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .bibtex-modal h3 { margin: 0 0 12px 0; font-family: 'Google Sans', sans-serif; }
+    .bibtex-close {
+      position: absolute; top: 12px; right: 16px; cursor: pointer;
+      font-size: 1.5em; color: #888; background: none; border: none;
+    }
+    .bibtex-close:hover { color: #333; }
+    .bibtex-box {
+      background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
+      padding: 16px; font-family: 'Courier New', monospace; font-size: 0.82em;
+      overflow-x: auto; white-space: pre; text-align: left;
+    }
+    .bibtex-copy {
+      margin-top: 10px; padding: 6px 16px; background: #4a6cf7; color: white;
+      border: none; border-radius: 5px; cursor: pointer; font-size: 0.9em;
+    }
+    .bibtex-copy:hover { background: #3a5ce5; }
+  </style>
+</head>
+
+<body>
+
+<!-- ================ BIBTEX MODAL ================ -->
+<div class="bibtex-overlay" id="bibtexModal">
+  <div class="bibtex-modal">
+    <button class="bibtex-close" onclick="closeBibtex()">&times;</button>
+    <h3>BibTeX</h3>
+    <div class="bibtex-box" id="bibtexContent">@inproceedings{nguyen2025tokengrounding,
+  title     = {Beyond the Global Scores: Fine-Grained Token Grounding
+               as a Robust Detector of LVLM Hallucinations},
+  author    = {Nguyen, Tuan Dung and Ho, Minh Khoi and Chen, Qi and
+               Xie, Yutong and Nguyen, Cam-Tu and Nguyen, Minh Khoi and
+               Nguyen, Dang Huy Pham and van den Hengel, Anton and
+               Verjans, Johan W. and Nguyen, Phi Le and
+               Phan, Vu Minh Hieu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer
+               Vision and Pattern Recognition (CVPR)},
+  year      = {2025}
+}</div>
+    <button class="bibtex-copy" onclick="copyBibtex()">Copy to Clipboard</button>
+    <span id="copyMsg" style="margin-left:10px;color:#4a6cf7;font-size:0.85em;display:none;">Copied!</span>
+  </div>
+</div>
+
+<script>
+function openBibtex(e) {
+  e.preventDefault();
+  document.getElementById('bibtexModal').classList.add('active');
+}
+function closeBibtex() {
+  document.getElementById('bibtexModal').classList.remove('active');
+}
+function copyBibtex() {
+  var text = document.getElementById('bibtexContent').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var msg = document.getElementById('copyMsg');
+    msg.style.display = 'inline';
+    setTimeout(function(){ msg.style.display = 'none'; }, 2000);
+  });
+}
+document.getElementById('bibtexModal').addEventListener('click', function(e) {
+  if (e.target === this) closeBibtex();
+});
+</script>
+
+<!-- ================ HERO ================ -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Beyond the Global Scores</h1>
+          <h3 class="title is-4 publication-title">Fine-Grained Token Grounding as a Robust Detector of LVLM Hallucinations</h3>
+          <h5 class="subtitle is-5 publication-awards">CVPR 2025</h5>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="#" style="color:#f68946;font-weight:normal;">Tuan Dung Nguyen<sup>1,2</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#008AD7;font-weight:normal;">Minh Khoi Ho<sup>1,4</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#F2A900;font-weight:normal;">Qi Chen<sup>2</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#f68946;font-weight:normal;">Yutong Xie<sup>4</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#008AD7;font-weight:normal;">Cam-Tu Nguyen<sup>3</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#F2A900;font-weight:normal;">Minh Khoi Nguyen<sup>1</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#f68946;font-weight:normal;">Dang Huy Pham Nguyen<sup>1,5</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#008AD7;font-weight:normal;">Anton van den Hengel<sup>2</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#F2A900;font-weight:normal;">Johan W. Verjans<sup>2</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#f68946;font-weight:normal;">Phi Le Nguyen<sup>1,*</sup></a>,</span>
+            <span class="author-block"><a href="#" style="color:#008AD7;font-weight:normal;">Vu Minh Hieu Phan<sup>2,*</sup></a></span>
+          </div>
+
+          <div class="is-size-6 publication-authors" style="margin-top:0.5em;">
+            <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>1</sup> Hanoi University of Science and Technology</span>&nbsp;&nbsp;
+            <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>2</sup> AIML, University of Adelaide</span>&nbsp;&nbsp;
+            <span class="author-block"><b style="color:#F2A900;font-weight:normal;">&#x25B6;</b> <sup>3</sup> Nanjing University</span>&nbsp;&nbsp;
+            <span class="author-block"><b style="color:#f68946;font-weight:normal;">&#x25B6;</b> <sup>4</sup> MBZUAI</span>&nbsp;&nbsp;
+            <span class="author-block"><b style="color:#008AD7;font-weight:normal;">&#x25B6;</b> <sup>5</sup> Hanoi-Amsterdam High School for the Gifted</span>
+          </div>
+          <div class="is-size-6 publication-authors"><span class="author-block"><sup>*</sup>Corresponding authors</span></div>
+
+          <div class="column has-text-centered" style="margin-top:0.8em;">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/tuandung2812alt3/token-grounding-detector.git" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" onclick="openBibtex(event)" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-quote-right"></i></span><span>BibTeX</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ TEASER ================ -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h4 class="subtitle has-text-centered">
+        <span style="font-weight:500;color:#444;">
+          We show that hallucinated tokens in LVLMs leave two distinct internal signatures:
+          <b>diffuse attention</b> and <b>weak patch-level semantic alignment</b>.
+          A lightweight classifier on these per-layer signals achieves up to <b>90% F1</b>,
+          outperforming all existing token-level detectors.
+        </span>
+      </h4>
+    </div>
+  </div>
+</section>
+
+<!-- ================ MOTIVATION ================ -->
+<section class="section" style="background-color:#efeff081;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3">Motivation</h2>
+        <div class="content has-text-justified">
+          <p>
+            Existing hallucination detectors rely on <b>global image-level statistics</b> — they sum or average
+            a token's attention across all visual patches to decide if it is grounded. But hallucinated tokens
+            can produce weak, scattered correlations across many patches that <em>aggregate</em> into deceptively
+            high global scores, fooling these methods.
+          </p>
+          <div class="insight-box">
+            <span class="finding-tag">Key Insight</span>
+            A faithful object token must be strongly grounded in a <b>specific</b> image region.
+            Detection should examine <em>where</em> a token attends, not just how much.
+          </div>
+          <div style="text-align:center;margin:1.5em 0;">
+            <img width="90%" src="images/fig1_motivation.png" alt="Figure 1">
+            <p class="fig-caption">Figure 1. Left: SVAR globally sums attention, missing hallucinations with scattered but high total attention. Right: Our method analyzes the spatial distribution — high entropy indicates hallucination.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ METHOD ================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3">Method</h2>
+      </div>
+    </div>
+    <div class="content has-text-justified">
+
+      <div style="text-align:center;margin-bottom:1.5em;">
+        <img width="95%" src="images/fig2_overview.png" alt="Figure 2">
+        <p class="fig-caption">Figure 2. Overview of our token-level hallucination detection framework.</p>
+      </div>
+
+      <p>We propose two complementary metrics from LVLM internals — <b>no external models</b>, <b>no LVLM retraining</b>:</p>
+
+      <div class="columns" style="margin-top:1em;">
+         <div class="column is-6">
+          <h5 class="title is-5" style="color:#d35400;">Attention Dispersion Score (ADS)</h5>
+          <p>Measures the <em>spatial compactness</em> of cross-modal attention. We threshold the top-10% patches, group into connected components to suppress attention sinks, then combine foreground blob mass with background entropy.</p>
+          <div style="text-align:center;margin:0.8em 0;">
+            <img width="100%" src="images/fig3_ads_pipeline.png" alt="Figure 3">
+            <p class="fig-caption">Figure 3. ADS pipeline: extract attention → threshold → connected components → entropy.</p>
+          </div>
+          <p>
+            <b>Low ADS</b> → compact focus → <span style="color:green;">grounded</span><br>
+            <b>High ADS</b> → scattered attention → <span style="color:red;">hallucinated</span>
+          </p>
+        </div>
+        <div class="column is-6">
+          <h5 class="title is-5" style="color:#2980b9;">Cross-modal Grounding Consistency (CGC)</h5>
+          <p>Measures <em>semantic alignment</em> between a token's hidden state and the most relevant patches. At each layer, we compute cosine similarity with all patches and average the top-\(k\):</p>
+          <div class="formula-box">
+            \(C_t^{(n)} = \frac{1}{k}\sum_{p \in \mathcal{T}_t^{(n)}} \frac{\langle \mathbf{z}_t^{(n)},\, \mathbf{v}_p^{(n)} \rangle}{\|\mathbf{z}_t^{(n)}\| \;\|\mathbf{v}_p^{(n)}\|}\)
+          </div>
+          <p style="font-size:0.88em;color:#555;">
+            \(\mathbf{z}_t^{(n)}\) = token hidden state;
+            \(\mathbf{v}_p^{(n)}\) = patch embedding;
+            \(\mathcal{T}_t^{(n)}\) = top-5% most similar patches.
+          </p>
+          <p>
+            <b>High CGC</b> → strong local alignment → <span style="color:green;">grounded</span><br>
+            <b>Low CGC</b> → no patch matches → <span style="color:red;">hallucinated</span>
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="95%" src="images/fig3_ads_pipeline.png" alt="Figure 3">
+        <p class="fig-caption">Figure 3. ADS pipeline: extract attention → threshold → connected components → entropy.</p>
+      </div>
+
+      <p>Per-layer scores are concatenated into a single feature vector for a lightweight classifier:</p>
+      <div class="formula-box">
+        \(\mathbf{f}_t = [\,\text{ADS}_t^{(1)}, \ldots, \text{ADS}_t^{(L)} \;\|\; C_t^{(1)}, \ldots, C_t^{(L)}\,] \in \mathbb{R}^{2L}\)
+      </div>
+      <p style="margin-top:0.5em;">We train XGBoost, Random Forest, and MLP classifiers. Detection adds <b>&lt;1 second per token</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================ KEY FINDINGS ================ -->
+<section class="section" style="background-color:#efeff081;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3">Key Findings</h2>
+      </div>
+    </div>
+    <div class="content has-text-justified">
+
+      <div class="insight-box">
+        <span class="finding-tag">Finding 1</span>
+        <b>Hallucinated tokens have diffuse, scattered attention.</b>
+        True tokens focus on compact regions; hallucinated tokens spread attention across unrelated areas.
+      </div>
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="85%" src="images/fig4_attention_maps.png" alt="Figure 4">
+        <p class="fig-caption">Figure 4. Attention maps: true token "camera" (top) vs. hallucinated "wristwatch" (bottom).</p>
+      </div>
+
+      <div class="insight-box">
+        <span class="finding-tag">Finding 2</span>
+        <b>Hallucinated tokens have weak semantic alignment with all patches.</b>
+        True tokens show high cosine similarity peaks; hallucinated tokens are uniformly low.
+      </div>
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="85%" src="images/fig9_cgc_heatmap.png" alt="Figure 9">
+        <p class="fig-caption">Figure 9. CGC heatmaps: true token "television" (top) vs. hallucinated "table" (bottom).</p>
+      </div>
+
+      <h4 class="title is-5" style="margin-top:1.5em;">Layer-wise Analysis</h4>
+      <p>Both signatures peak in <b>early-to-mid layers</b> (10–25), where cross-modal alignment is strongest before language priors dominate.</p>
+      <div style="text-align:center;margin:1em 0;">
+        <img width="100%" src="images/fig5_ads_layerwise.png" alt="Figure 5">
+        <p class="fig-caption">Figure 5. Layer-wise ADS: hallucinated tokens show higher dispersion in early/mid layers.</p>
+      </div>
+      <div style="text-align:center;margin:1em 0;">
+        <img width="100%" src="images/fig8_cgc_layerwise.png" alt="Figure 8">
+        <p class="fig-caption">Figure 8. Layer-wise CGC: true tokens maintain higher similarity; the gap narrows at depth.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================ RESULTS ================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+        <h2 class="title is-3">Experimental Results</h2>
+      </div>
+    </div>
+    <div class="content has-text-justified">
+
+      <h4 class="title is-5">MS-COCO Image Captioning (Table 2)</h4>
+      <p>Our method consistently outperforms all baselines by <b>5–15%</b> across three LVLMs.</p>
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="95%" src="images/table2.png" alt="Table 2">
+      </div>
+
+      <h4 class="title is-5" style="margin-top:2em;">POPE Benchmark (Table 3)</h4>
+      <p>Under heavy class imbalance (6% hallucination rate), we outperform the best baseline by <b>+3% F1</b> and <b>+5% AUC</b>.</p>
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="45%" src="images/table3.png" alt="Table 3">
+      </div>
+
+      <h4 class="title is-5" style="margin-top:2em;">Ablation: ADS + CGC (Table 4)</h4>
+      <p>ADS captures <em>where</em> the model looks; CGC captures <em>what</em> it sees. Combining both yields <b>+3–8% AUC</b>.</p>
+      <div style="text-align:center;margin:1.5em 0;">
+        <img width="45%" src="images/table4.png" alt="Table 4">
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================ FOOTER ================ -->
+<section class="section">
+  <div class="container is-max-desktop has-text-centered">
+    <p style="color:#888;font-size:0.9em;">
+      This research is funded by Hanoi University of Science and Technology (HUST) under grant number T2024-TĐ-002.<br>
+      Parts of our codebase build upon <a href="https://github.com/ZhangqiJiang07/middle_layers_indicating_hallucinations">SVAR</a>. We thank the authors for releasing their code.<br>
+      For questions, contact <a href="mailto:tuandung2812alt@gmail.com">tuandung2812alt@gmail.com</a>.
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
