@@ -266,7 +266,8 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
         <b>High CGC</b> → token aligns with specific visual content → <span style="color:green;">grounded</span><br>
         <b>Low CGC</b> → no patch matches semantically → <span style="color:red;">hallucinated</span>
     </p>
-    </div>   
+    </div> 
+    </div>  
       <p>Per-layer scores are concatenated into a single feature vector for a lightweight classifier:</p>
       <div class="formula-box">
         \(\mathbf{f}_t = [\,\text{ADS}_t^{(1)}, \ldots, \text{ADS}_t^{(L)} \;\|\; C_t^{(1)}, \ldots, C_t^{(L)}\,] \in \mathbb{R}^{2L}\)
@@ -337,7 +338,24 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
         <img width="95%" src="images/table2.png" alt="Table 2">
       </div>
 
-      <h4 class="title is-5" style="margin-top:2em;">POPE Benchmark (Table 3)</h4>
+    <div class="columns" style="margin-top:2em;">
+    <div class="column is-6">
+        <h4 class="title is-5">POPE Benchmark (Table 3)</h4>
+        <p>Under heavy class imbalance (6% hallucination rate), we outperform the best baseline by <b>+3% F1</b> and <b>+5% AUC</b>.</p>
+        <div style="text-align:center;margin:1em 0;">
+        <img width="90%" src="images/table3.png" alt="Table 3">
+        </div>
+    </div>
+    <div class="column is-6">
+        <h4 class="title is-5">Ablation: ADS + CGC (Table 4)</h4>
+        <p>ADS captures <em>where</em> the model looks; CGC captures <em>what</em> it sees. Combining both yields <b>+3–8% AUC</b>.</p>
+        <div style="text-align:center;margin:1em 0;">
+        <img width="90%" src="images/table4.png" alt="Table 4">
+        </div>
+    </div>
+    </div>
+
+      <!-- <h4 class="title is-5" style="margin-top:2em;">POPE Benchmark (Table 3)</h4>
       <p>Under heavy class imbalance (6% hallucination rate), we outperform the best baseline by <b>+3% F1</b> and <b>+5% AUC</b>.</p>
       <div style="text-align:center;margin:1.5em 0;">
         <img width="45%" src="images/table3.png" alt="Table 3">
@@ -347,7 +365,7 @@ document.getElementById('bibtexModal').addEventListener('click', function(e) {
       <p>ADS captures <em>where</em> the model looks; CGC captures <em>what</em> it sees. Combining both yields <b>+3–8% AUC</b>.</p>
       <div style="text-align:center;margin:1.5em 0;">
         <img width="45%" src="images/table4.png" alt="Table 4">
-      </div>
+      </div> -->
 
     </div>
   </div>
